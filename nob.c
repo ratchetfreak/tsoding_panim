@@ -40,7 +40,6 @@ bool build_plug_c3(bool force, Nob_Cmd *cmd, const char *output_path, const char
     int rebuild_is_needed = nob_needs_rebuild(nob_temp_sprintf("%s.so", output_path), source_paths, source_paths_count);
     if (rebuild_is_needed < 0) return false;
     if (force || rebuild_is_needed) {
-        cmd->count = 0;
         // TODO: check if c3c compile even exists
         // otherwise this is not buildable
         nob_cmd_append(cmd, "c3c", "dynamic-lib", "-o", output_path);
@@ -57,13 +56,12 @@ bool build_plug_c(bool force, Nob_Cmd *cmd, const char *source_path, const char 
     if (rebuild_is_needed < 0) return false;
 
     if (force || rebuild_is_needed) {
-        cmd->count = 0;
         cc(cmd);
         nob_cmd_append(cmd, "-fPIC", "-shared", "-Wl,--no-undefined");
         nob_cmd_append(cmd, "-o", output_path);
         nob_cmd_append(cmd, source_path);
         libs(cmd);
-        return nob_cmd_run_sync(*cmd);
+        return nob_cmd_run_sync_and_reset(cmd);
     }
 
     nob_log(NOB_INFO, "%s is up-to-date", output_path);
@@ -76,13 +74,12 @@ bool build_plug_cxx(bool force, Nob_Cmd *cmd, const char *source_path, const cha
     if (rebuild_is_needed < 0) return false;
 
     if (force || rebuild_is_needed) {
-        cmd->count = 0;
         cxx(cmd);
         nob_cmd_append(cmd, "-fPIC", "-shared", "-Wl,--no-undefined");
         nob_cmd_append(cmd, "-o", output_path);
         nob_cmd_append(cmd, source_path);
         libs(cmd);
-        return nob_cmd_run_sync(*cmd);
+        return nob_cmd_run_sync_and_reset(cmd);
     }
 
     nob_log(NOB_INFO, "%s is up-to-date", output_path);
@@ -95,12 +92,11 @@ bool build_exe(bool force, Nob_Cmd *cmd, const char **input_paths, size_t input_
     if (rebuild_is_needed < 0) return false;
 
     if (force || rebuild_is_needed) {
-        cmd->count = 0;
         cc(cmd);
         nob_cmd_append(cmd, "-o", output_path);
         nob_da_append_many(cmd, input_paths, input_paths_len);
         libs(cmd);
-        return nob_cmd_run_sync(*cmd);
+        return nob_cmd_run_sync_and_reset(cmd);
     }
 
     nob_log(NOB_INFO, "%s is up-to-date", output_path);
