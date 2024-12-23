@@ -652,6 +652,7 @@ void plug_reset(void)
             task_move_scalar(a, &p->scene.table.head_t, 1.0, 0.5, FUNC_SMOOTHSTEP)),
 
         task_inc(a, zero, one),
+
         // task_fun(a),
 
         task_wait(a, 1.5),
@@ -942,3 +943,4 @@ bool plug_finished(void)
 
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
+#include "tasks.c"

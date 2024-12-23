@@ -1,14 +1,17 @@
 #define NOB_IMPLEMENTATION
-#include "./src/nob.h"
+#include "nob.h"
 
-#define BUILD_DIR "./build"
-#define SRC_DIR "./src"
+// Folder must with with forward slash /
+#define BUILD_DIR "./build/"
+#define PANIM_DIR "./panim/"
+#define PLUGS_DIR "./plugs/"
 
 void cflags(Nob_Cmd *cmd)
 {
     nob_cmd_append(cmd, "-Wall", "-Wextra", "-ggdb");
     nob_cmd_append(cmd, "-I./raylib/raylib-5.0_linux_amd64/include");
-    nob_cmd_append(cmd, "-I./src/");
+    nob_cmd_append(cmd, "-I"PANIM_DIR);
+    nob_cmd_append(cmd, "-I.");
 }
 
 void cc(Nob_Cmd *cmd)
@@ -27,7 +30,7 @@ void cxx(Nob_Cmd *cmd)
 void libs(Nob_Cmd *cmd)
 {
     nob_cmd_append(cmd, "-Wl,-rpath=./raylib/raylib-5.0_linux_amd64/lib/");
-    nob_cmd_append(cmd, "-Wl,-rpath="BUILD_DIR);
+    nob_cmd_append(cmd, "-Wl,-rpath="PANIM_DIR);
     nob_cmd_append(cmd, "-L./raylib/raylib-5.0_linux_amd64/lib");
     nob_cmd_append(cmd, "-l:libraylib.so", "-lm", "-ldl", "-lpthread");
 }
@@ -42,7 +45,7 @@ bool build_plug_c(bool force, Nob_Cmd *cmd, const char *source_path, const char 
         cc(cmd);
         nob_cmd_append(cmd, "-fPIC", "-shared", "-Wl,--no-undefined");
         nob_cmd_append(cmd, "-o", output_path);
-        nob_cmd_append(cmd, source_path, SRC_DIR"/tasks.c");
+        nob_cmd_append(cmd, source_path);
         libs(cmd);
         return nob_cmd_run_sync(*cmd);
     }
@@ -61,7 +64,7 @@ bool build_plug_cxx(bool force, Nob_Cmd *cmd, const char *source_path, const cha
         cxx(cmd);
         nob_cmd_append(cmd, "-fPIC", "-shared", "-Wl,--no-undefined");
         nob_cmd_append(cmd, "-o", output_path);
-        nob_cmd_append(cmd, source_path, SRC_DIR"/tasks.c");
+        nob_cmd_append(cmd, source_path);
         libs(cmd);
         return nob_cmd_run_sync(*cmd);
     }
@@ -109,17 +112,17 @@ int main(int argc, char **argv)
     if (!nob_mkdir_if_not_exists(BUILD_DIR)) return 1;
 
     Nob_Cmd cmd = {0};
-    if (!build_plug_c(force, &cmd, SRC_DIR"/tm.c", BUILD_DIR"/libtm.so")) return 1;
-    if (!build_plug_c(force, &cmd, SRC_DIR"/template.c", BUILD_DIR"/libtemplate.so")) return 1;
-    if (!build_plug_c(force, &cmd, SRC_DIR"/squares.c", BUILD_DIR"/libsquare.so")) return 1;
-    if (!build_plug_c(force, &cmd, SRC_DIR"/bezier.c", BUILD_DIR"/libbezier.so")) return 1;
-    if (!build_plug_cxx(force, &cmd, SRC_DIR"/probe.cpp", BUILD_DIR"/libprobe.so")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"tm/plug.c", BUILD_DIR"libtm.so")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"template/plug.c", BUILD_DIR"libtemplate.so")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"squares/plug.c", BUILD_DIR"libsquare.so")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"bezier/plug.c", BUILD_DIR"libbezier.so")) return 1;
+    if (!build_plug_cxx(force, &cmd, PLUGS_DIR"cpp/plug.cpp", BUILD_DIR"libcpp.so")) return 1;
 
     {
-        const char *output_path = BUILD_DIR"/panim";
+        const char *output_path = BUILD_DIR"panim";
         const char *input_paths[] = {
-            SRC_DIR"/panim.c",
-            SRC_DIR"/ffmpeg_linux.c"
+            PANIM_DIR"panim.c",
+            PANIM_DIR"ffmpeg_linux.c"
         };
         size_t input_paths_len = NOB_ARRAY_LEN(input_paths);
         if (!build_exe(force, &cmd, input_paths, input_paths_len, output_path)) return 1;

@@ -168,3 +168,4 @@ bool plug_finished(void)
 
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
+#include "tasks.c"
