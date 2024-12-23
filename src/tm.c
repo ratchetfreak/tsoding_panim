@@ -857,7 +857,7 @@ void plug_update(Env env)
             };
             watermark.x = state_rec.x,
             watermark.y = state_rec.y + state_rec.height;
-            text_in_rec(watermark, "x.com/tsoding", FONT_REGULAR, FONT_SIZE*0.25, ColorAlpha(CELL_COLOR, p->scene.t*0.5));
+            text_in_rec(watermark, "tsoding.bsky.social", FONT_REGULAR, FONT_SIZE*0.25, ColorAlpha(CELL_COLOR, p->scene.t*0.5));
         }
 
         // Table
