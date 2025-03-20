@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#include <dlfcn.h>
+//#include <dlfcn.h>
 
 #define NOB_IMPLEMENTATION
 #include "nob.h"
@@ -46,6 +46,32 @@ static float delta_time_multiplier_popup = 0.0f;
 LIST_OF_PLUGS
 #undef PLUG
 
+#if 1
+static bool reload_libplug(const char *libplug_path)
+{
+    if (libplug != NULL) {
+        FreeLibrary (libplug);
+    }
+
+    libplug = LoadLibraryA(libplug_path);
+    if (libplug == NULL) {
+        fprintf(stderr, "ERROR: %d\n", GetLastError ());
+        return false;
+    }
+
+    #define PLUG(name, ret, arg) \
+        name = ( ret(*)(arg) )GetProcAddress (libplug, #name); \
+        if (name == NULL) { \
+            fprintf(stderr, "ERROR: %d\n", GetLastError ()); \
+            return false; \
+        }
+    LIST_OF_PLUGS
+    
+    #undef PLUG
+
+    return true;
+}
+#else
 static bool reload_libplug(const char *libplug_path)
 {
     if (libplug != NULL) {
@@ -69,6 +95,7 @@ static bool reload_libplug(const char *libplug_path)
 
     return true;
 }
+#endif
 
 static void finish_ffmpeg_video_rendering(bool cancel)
 {

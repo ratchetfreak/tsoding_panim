@@ -1,6 +1,9 @@
 build/
 nob
+nob.exe
+nob.exe.old
 nob.old
+*.obj
 *.mp4
 *.wav
 *~
