@@ -8,11 +8,11 @@
 
 
 
-#if 1
+#ifdef _WIN32
 
 void cflags(Nob_Cmd *cmd)
 {
-    nob_cmd_append(cmd, "/W4", "/Z7", "/FC", "-D_CRT_SECURE_NO_WARNINGS=1");
+    nob_cmd_append(cmd, "/W4", "/Z7", "/FC", "-D_CRT_SECURE_NO_WARNINGS=1","/diagnostics:caret", "/diagnostics:color");
     nob_cmd_append(cmd, "-I./raylib/raylib-5.0_windows_amd64/include");
     nob_cmd_append(cmd, "-I"PANIM_DIR);
     nob_cmd_append(cmd, "-I.");
@@ -178,8 +178,10 @@ int main(int argc, char **argv)
 
     Nob_Cmd cmd = {0};
     if (!build_plug_c(force, &cmd, PLUGS_DIR"tm/plug.c", BUILD_DIR"libtm.dll")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"tasklesstm/plug.c", BUILD_DIR"libtasklesstm.dll")) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"template/plug.c", BUILD_DIR"libtemplate.dll")) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"squares/plug.c", BUILD_DIR"libsquare.dll")) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"tasklesssquares/plug.c", BUILD_DIR"libtasklesssquare.dll")) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"bezier/plug.c", BUILD_DIR"libbezier.dll")) return 1;
     if (!build_plug_cxx(force, &cmd, PLUGS_DIR"cpp/plug.cpp", BUILD_DIR"libcpp.dll")) return 1;
     {

@@ -46,27 +46,29 @@ static float delta_time_multiplier_popup = 0.0f;
 LIST_OF_PLUGS
 #undef PLUG
 
-#if 1
+#ifdef _WIN32
 static bool reload_libplug(const char *libplug_path)
 {
     if (libplug != NULL) {
         FreeLibrary (libplug);
     }
 
-    libplug = LoadLibraryA(libplug_path);
+    
+    nob_copy_file(libplug_path, "tmpplug.dll");
+    libplug = LoadLibraryA("tmpplug.dll");
     if (libplug == NULL) {
         fprintf(stderr, "ERROR: %d\n", GetLastError ());
         return false;
     }
 
-    #define PLUG(name, ret, arg) \
-        name = ( ret(*)(arg) )GetProcAddress (libplug, #name); \
+    #define PLUG(name, ret, ...) \
+        name = ( ret(*)(__VA_ARGS__) )GetProcAddress (libplug, #name); \
         if (name == NULL) { \
             fprintf(stderr, "ERROR: %d\n", GetLastError ()); \
             return false; \
         }
     LIST_OF_PLUGS
-    
+
     #undef PLUG
 
     return true;
