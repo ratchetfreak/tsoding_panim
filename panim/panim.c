@@ -5,7 +5,9 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#ifndef _WIN32
 //#include <dlfcn.h>
+#endif
 
 #define NOB_IMPLEMENTATION
 #include "nob.h"
