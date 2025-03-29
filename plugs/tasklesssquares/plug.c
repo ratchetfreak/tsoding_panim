@@ -98,6 +98,10 @@ void shuffle_squares(AnimState *anim, Square *s1, Square *s2, Square *s3)
 
 bool loading()
 {
+    for (size_t i = 0; i < SQUARES_COUNT; ++i) {
+        p->squares[i].position = grid(i/2, i%2);
+        p->squares[i].color = ColorNormalize(FOREGROUND_COLOR);
+    }
     Square *s1 = &p->squares[0];
     Square *s2 = &p->squares[1];
     Square *s3 = &p->squares[2];
@@ -115,10 +119,6 @@ bool loading()
 
 void plug_reset(void)
 {
-    for (size_t i = 0; i < SQUARES_COUNT; ++i) {
-        p->squares[i].position = grid(i/2, i%2);
-        p->squares[i].color = ColorNormalize(FOREGROUND_COLOR);
-    }
     p->finished = false;
     arena_reset(&p->state_arena);
 
@@ -161,6 +161,7 @@ void plug_update(Env env)
     p->anim.currentTime += env.delta_time;
     p->anim.clipStartTime = 0;
     p->anim.globEnd = 0;
+    p->anim.deltaTime = env.delta_time;
     p->finished = loading(p, env);
 
     ClearBackground(BACKGROUND_COLOR);
