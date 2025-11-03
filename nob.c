@@ -10,6 +10,7 @@
 #define RAYLIB_DIR THIRDPARTY_DIR"raylib-5.0_linux_amd64/"
 
 Cmd cmd = {0};
+Procs procs = {0};
 
 void cflags(void)
 {
@@ -51,7 +52,7 @@ bool build_plug_c(bool force, const char *source_path, const char *output_path)
         cmd_append(&cmd, "-o", output_path);
         cmd_append(&cmd, source_path);
         libs();
-        return cmd_run(&cmd);
+        return cmd_run(&cmd, .async = &procs);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
@@ -69,7 +70,7 @@ bool build_plug_cxx(bool force, const char *source_path, const char *output_path
         cmd_append(&cmd, "-o", output_path);
         cmd_append(&cmd, source_path);
         libs();
-        return cmd_run(&cmd);
+        return cmd_run(&cmd, .async = &procs);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
@@ -86,7 +87,7 @@ bool build_exe(bool force, const char **input_paths, size_t input_paths_len, con
         cmd_append(&cmd, "-o", output_path);
         da_append_many(&cmd, input_paths, input_paths_len);
         libs();
-        return cmd_run(&cmd);
+        return cmd_run(&cmd, .async = &procs);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
@@ -128,6 +129,8 @@ int main(int argc, char **argv)
         size_t input_paths_len = ARRAY_LEN(input_paths);
         if (!build_exe(force, input_paths, input_paths_len, output_path)) return 1;
     }
+
+    if (!procs_flush(&procs)) return 1;
 
     return 0;
 }
