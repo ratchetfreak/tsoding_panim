@@ -49,7 +49,7 @@ bool build_plug_c(bool force, Cmd *cmd, const char *source_path, const char *out
         cmd_append(cmd, "-o", output_path);
         cmd_append(cmd, source_path);
         libs(cmd);
-        return cmd_run_sync_and_reset(cmd);
+        return cmd_run(cmd);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
@@ -67,7 +67,7 @@ bool build_plug_cxx(bool force, Cmd *cmd, const char *source_path, const char *o
         cmd_append(cmd, "-o", output_path);
         cmd_append(cmd, source_path);
         libs(cmd);
-        return cmd_run_sync_and_reset(cmd);
+        return cmd_run(cmd);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
@@ -84,7 +84,7 @@ bool build_exe(bool force, Cmd *cmd, const char **input_paths, size_t input_path
         cmd_append(cmd, "-o", output_path);
         da_append_many(cmd, input_paths, input_paths_len);
         libs(cmd);
-        return cmd_run_sync_and_reset(cmd);
+        return cmd_run(cmd);
     }
 
     nob_log(INFO, "%s is up-to-date", output_path);
