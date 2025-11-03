@@ -95,12 +95,12 @@ int main(int argc, char **argv)
 {
     NOB_GO_REBUILD_URSELF(argc, argv);
 
-    const char *program_name = shift_args(&argc, &argv);
+    const char *program_name = shift(argv, argc);
     (void) program_name;
 
     bool force = false;
     while (argc > 0) {
-        const char *flag = shift_args(&argc, &argv);
+        const char *flag = shift(argv, argc);
         if (strcmp(flag, "-f") == 0) {
             force = true;
         } else {
