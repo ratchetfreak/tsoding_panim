@@ -5,11 +5,13 @@
 #define BUILD_DIR "./build/"
 #define PANIM_DIR "./panim/"
 #define PLUGS_DIR "./plugs/"
+#define THIRDPARTY_DIR "./thirdparty/"
+#define RAYLIB_DIR THIRDPARTY_DIR"raylib-5.0_linux_amd64/"
 
 void cflags(Nob_Cmd *cmd)
 {
     nob_cmd_append(cmd, "-Wall", "-Wextra", "-ggdb");
-    nob_cmd_append(cmd, "-I./raylib/raylib-5.0_linux_amd64/include");
+    nob_cmd_append(cmd, "-I"RAYLIB_DIR"include");
     nob_cmd_append(cmd, "-I"PANIM_DIR);
     nob_cmd_append(cmd, "-I.");
 }
@@ -29,9 +31,9 @@ void cxx(Nob_Cmd *cmd)
 
 void libs(Nob_Cmd *cmd)
 {
-    nob_cmd_append(cmd, "-Wl,-rpath=./raylib/raylib-5.0_linux_amd64/lib/");
+    nob_cmd_append(cmd, "-Wl,-rpath="RAYLIB_DIR"lib/");
     nob_cmd_append(cmd, "-Wl,-rpath="PANIM_DIR);
-    nob_cmd_append(cmd, "-L./raylib/raylib-5.0_linux_amd64/lib");
+    nob_cmd_append(cmd, "-L"RAYLIB_DIR"lib");
     nob_cmd_append(cmd, "-l:libraylib.so", "-lm", "-ldl", "-lpthread");
 }
 
