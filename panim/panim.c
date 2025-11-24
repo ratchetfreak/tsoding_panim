@@ -20,7 +20,7 @@
 #define FFMPEG_VIDEO_FPS 60
 #define FFMPEG_VIDEO_DELTA_TIME (1.0f/FFMPEG_VIDEO_FPS)
 #define FFMPEG_SOUND_SAMPLE_RATE 44100
-#define FFMPEG_SOUND_CHANNELS 2
+#define FFMPEG_SOUND_CHANNELS 1
 #define FFMPEG_SOUND_SAMPLE_SIZE_BITS 16
 #define FFMPEG_SOUND_SAMPLE_SIZE_BYTES (FFMPEG_SOUND_SAMPLE_SIZE_BITS/8)
 // SPF - Samples Per Frame
@@ -106,7 +106,8 @@ void ffmpeg_play_sound(Sound _sound, Wave wave)
         TraceLog(LOG_ERROR,
                  "Animation tried to play sound with rate: %dhz, sample size: %d bits, channels: %d. "
                  "But we only support rate: %dhz, sample size: %d bits, channels: %d for now",
-                 wave.sampleRate, wave.sampleSize, wave.channels);
+                 wave.sampleRate, wave.sampleSize, wave.channels,
+                 FFMPEG_SOUND_SAMPLE_RATE, FFMPEG_SOUND_SAMPLE_SIZE_BITS, FFMPEG_SOUND_CHANNELS);
         return;
     }
 

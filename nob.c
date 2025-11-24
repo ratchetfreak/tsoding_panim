@@ -14,7 +14,7 @@ Procs procs = {0};
 
 void cflags(void)
 {
-    cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb");
+    cmd_append(&cmd, "-Wall", "-Wextra", "-Wno-missing-field-initializers", "-ggdb");
     cmd_append(&cmd, "-I"RAYLIB_DIR"include");
     cmd_append(&cmd, "-I"PANIM_DIR);
     cmd_append(&cmd, "-I.");
@@ -117,6 +117,7 @@ int main(int argc, char **argv)
     if (!build_plug_c(force, PLUGS_DIR"tm/plug.c", BUILD_DIR"libtm.so")) return 1;
     if (!build_plug_c(force, PLUGS_DIR"template/plug.c", BUILD_DIR"libtemplate.so")) return 1;
     if (!build_plug_c(force, PLUGS_DIR"squares/plug.c", BUILD_DIR"libsquare.so")) return 1;
+    if (!build_plug_c(force, PLUGS_DIR"tsoding/plug.c", BUILD_DIR"libtsoding.so")) return 1;
     if (!build_plug_c(force, PLUGS_DIR"bezier/plug.c", BUILD_DIR"libbezier.so")) return 1;
     if (!build_plug_cxx(force, PLUGS_DIR"cpp/plug.cpp", BUILD_DIR"libcpp.so")) return 1;
 

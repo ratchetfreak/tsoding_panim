@@ -1,8 +1,8 @@
 build/
 nob
 nob.old
-*.mp4
-*.wav
+output.mp4
+output.wav
 *~
 
 # LaTeX

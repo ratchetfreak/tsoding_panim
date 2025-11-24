@@ -118,7 +118,7 @@ FFMPEG *ffmpeg_start_rendering_audio(const char *output_path)
 
             "-f", "s16le",
             "-sample_rate", "44100",
-            "-channels", "2",
+            "-channels", "1",
             "-i", "-",
 
             "-c:a", "pcm_s16le",
