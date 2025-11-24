@@ -14,7 +14,11 @@ Procs procs = {0};
 
 void cflags(void)
 {
-    cmd_append(&cmd, "-Wall", "-Wextra", "-Wno-missing-field-initializers", "-ggdb");
+    cmd_append(&cmd, "-Wall");
+    cmd_append(&cmd, "-Wextra");
+    cmd_append(&cmd, "-Wno-missing-field-initializers");
+    cmd_append(&cmd, "-Wno-unused-function");
+    cmd_append(&cmd, "-ggdb");
     cmd_append(&cmd, "-I"RAYLIB_DIR"include");
     cmd_append(&cmd, "-I"PANIM_DIR);
     cmd_append(&cmd, "-I.");
@@ -104,7 +108,7 @@ int main(int argc, char **argv)
     bool force = false;
     while (argc > 0) {
         const char *flag = shift(argv, argc);
-        if (strcmp(flag, "-f") == 0) {
+        if (strcmp(flag, "-f") == 0 || strcmp(flag, "-B") == 0) {
             force = true;
         } else {
             nob_log(ERROR, "Unknown flag %s", flag);

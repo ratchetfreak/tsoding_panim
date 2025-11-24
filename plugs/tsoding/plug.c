@@ -46,24 +46,22 @@ static void unload_assets(void)
     UnloadWave(p->kick_wave);
 }
 
-void co_interpolate(Stack *stack, float *x, float a, float b, float duration)
+#define co_tween(stack, duration, ...) co_tween_impl((stack), (duration), __VA_ARGS__, NULL)
+void co_tween_impl(Stack *stack, float duration, ...)
 {
     float t = 0.0;
     while (t < 1.0f) {
         t = (t*duration + p->env.delta_time)/duration;
-        *x = Lerp(a, b, t*t);
-        coroutine_yield(stack);
-    }
-}
-
-void co_interpolate3(Stack *stack, float *x, float ax, float bx, float *y, float ay, float by, float *z, float az, float bz, float duration)
-{
-    float t = 0.0;
-    while (t < 1.0f) {
-        t = (t*duration + p->env.delta_time)/duration;
-        *x = Lerp(ax, bx, t*t);
-        *y = Lerp(ay, by, t*t);
-        *z = Lerp(az, bz, t*t);
+        va_list args;
+        va_start(args, duration);
+        float *x = va_arg(args, float*);
+        while (x != NULL) {
+            float a = va_arg(args, double);
+            float b = va_arg(args, double);
+            *x = Lerp(a, b, t*t);
+            x = va_arg(args, float*);
+        }
+        va_end(args);
         coroutine_yield(stack);
     }
 }
@@ -71,7 +69,7 @@ void co_interpolate3(Stack *stack, float *x, float ax, float bx, float *y, float
 void co_sleep(Stack *stack, float duration)
 {
     float x;
-    co_interpolate(stack, &x, 0, 1, duration);
+    co_tween(stack, duration, &x, 0, 1);
 }
 
 void animation(Stack *stack, void *data)
@@ -86,20 +84,19 @@ void animation(Stack *stack, void *data)
     float duration = 0.15f;
     float sleep = 0.25f;
     p->env.play_sound(p->kick_sound, p->kick_wave);
-    co_interpolate(stack, &p->radius, 0.f, 1.f, duration);
+    co_tween(stack, duration, &p->radius, 0.f, 1.f);
     co_sleep(stack, sleep);
     p->env.play_sound(p->kick_sound, p->kick_wave);
-    co_interpolate(stack, &p->roundness, 0.f, 1.f, duration);
+    co_tween(stack, duration, &p->roundness, 0.f, 1.f);
     co_sleep(stack, sleep);
     p->env.play_sound(p->kick_sound, p->kick_wave);
-    co_interpolate3(stack,
+    co_tween(stack, duration,
          &p->alpha,     0.f, 1.f,
          &p->roundness, 1.f, 0.f,
-         &p->rotation,  0.f, 1.f,
-         duration);
+         &p->rotation,  0.f, 1.f);
     co_sleep(stack, sleep);
     p->env.play_sound(p->kick_sound, p->kick_wave);
-    co_interpolate(stack, &p->radius, 1.f, 0.f, duration);
+    co_tween(stack, duration, &p->radius, 1.f, 0.f);
     co_sleep(stack, 2.0);
 }
 
