@@ -192,6 +192,7 @@ int main(int argc, char **argv)
     Nob_Cmd cmd = {0};
     if (!build_plug_c(force, &cmd, PLUGS_DIR"tm/plug.c", BUILD_DIR"libtm"DYNLIB_EXT)) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"tasklesstm/plug.c", BUILD_DIR"libtasklesstm"DYNLIB_EXT)) return 1;
+    if (!build_plug_c(force, &cmd, PLUGS_DIR"tasklesstsoding/plug.c", BUILD_DIR"libtasklesstsoding"DYNLIB_EXT)) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"template/plug.c", BUILD_DIR"libtemplate"DYNLIB_EXT)) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"squares/plug.c", BUILD_DIR"libsquare"DYNLIB_EXT)) return 1;
     if (!build_plug_c(force, &cmd, PLUGS_DIR"tasklesssquares/plug.c", BUILD_DIR"libtasklesssquare"DYNLIB_EXT)) return 1;
@@ -206,7 +207,7 @@ int main(int argc, char **argv)
         };
         size_t source_paths_count = NOB_ARRAY_LEN(source_paths);
 
-        if (!build_plug_c3(force, &cmd, output_path, source_paths, source_paths_count)) return 1;
+        if (!build_plug_c3(force, &cmd, output_path, source_paths, source_paths_count));// return 1;
     }
 
     {
